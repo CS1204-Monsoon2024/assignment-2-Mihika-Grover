@@ -7,17 +7,38 @@ private:
     bool* isDeleted;      // Array to track deleted elements
     int size;             // no of numbers in table
     int capacity;         // max capacity of table
-    float loadFactorThreshold = 0.8; //load factor as given in ques
+    const float loadFactorThreshold = 0.8; //load factor as given in ques
 
     // defining hash function
     int hashFunction(int key) {
         return key % capacity;   //h(k) = k mod m
     }
+    // Helper function to check if a number is prime
+    
+    bool isPrime(int n) {
+        if (n <= 1) return false;
+        if (n == 2 || n == 3) return true;
+        if (n % 2 == 0 || n % 3 == 0) return false;
+        for (int i = 5; i * i <= n; i += 6) {
+            if (n % i == 0 || n % (i + 2) == 0)
+                return false;
+        }
+        return true;
+    }
 
+    // Helper function to find the next prime number greater than or equal to n
+    int nextPrime(int n) {
+        while (!isPrime(n)) {
+            n++;
+        }
+        return n;
+    }
+    
     // resizing and rehashing when load factor > 0.8
     void resizeAndRehash() {
         int oldCapacity = capacity;
         capacity *= 2;  // doubling the capacity
+        capacity = nextPrime(capacity);
         int* oldTable = table;
         bool* oldIsDeleted = isDeleted;
 
@@ -139,4 +160,7 @@ public:
         cout << endl;
     }
 };
+
+
+
 
