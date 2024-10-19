@@ -3,8 +3,8 @@ using namespace std;
 
 class HashTable {
 private:
-    int* table;           // Array for storing keys
-    bool* isDeleted;      // Array to track deleted elements
+    int* table;           // array to store the keys
+    bool* isDeleted;      // array check for deleted elements
     int size;             // no of numbers in table
     int capacity;         // max capacity of table
     float loadFactorThreshold = 0.8; //load factor as given in ques
@@ -13,23 +13,26 @@ private:
     int hashFunction(int key) {
         return key % capacity;   //h(k) = k mod m
     }
-    // Helper function to check if a number is prime
-    
+    //function to check if a number is prime
+    //needed to resize table to prime
     bool isPrime(int n) {
-        if (n <= 1) return false;
-        if (n == 2 || n == 3) return true;
-        if (n % 2 == 0 || n % 3 == 0) return false;
-        for (int i = 5; i * i <= n; i += 6) {
-            if (n % i == 0 || n % (i + 2) == 0)
-                return false;
+        int count = 0;
+        else{
+            // checking for no of divisors of that number
+            for (int i = 1; i <= n; i++) {
+
+            //if n is divisible by i then count of divisor = +1
+            if (n % i == 0)
+                count++;
+        }
         }
         return true;
     }
 
-    // Helper function to find the next prime number greater than or equal to n
+    // function to find the next prime number greater to resize to that
     int nextPrime(int n) {
-        while (!isPrime(n)) {
-            n++;
+        while (!isPrime(n)) {  //if the given is not prime
+            n++;        //increment till you get a prime number
         }
         return n;
     }
@@ -38,7 +41,7 @@ private:
     void resizeAndRehash() {
         int oldCapacity = capacity;
         capacity *= 2;  // doubling the capacity
-        capacity = nextPrime(capacity);
+        capacity = nextPrime(capacity);  //if new capacity not prime, will take the next largest prime
         int* oldTable = table;
         bool* oldIsDeleted = isDeleted;
 
@@ -46,28 +49,25 @@ private:
         table = new int[capacity];
         isDeleted = new bool[capacity];
         
-        // Initialize new table with -1 (empty) and false for deleted marker
+        // Initialize new table with -1 (empty) and false for deleted marker as new table
         for (int i = 0; i < capacity; i++) {
             table[i] = -1;
             isDeleted[i] = false;
         }
 
-        size = 0;  // Reset size since we're re-inserting all elements
+        size = 0;  // reset size 0 as we will reinsert elements
 
-        // Rehash all elements from old table into the new table
+        // rehashing elements from old table to new table
         for (int i = 0; i < oldCapacity; i++) {
-            if (oldTable[i] != -1 && !oldIsDeleted[i]) {
+            if (oldTable[i] != -1 && !oldIsDeleted[i]) {  //if was not deleted from old table
                 insert(oldTable[i]);  // Reinsert the element into the new table
             }
         }
 
-        // deleting old table
-        delete[] oldTable;
-        delete[] oldIsDeleted;
-    }
+        
 
 public:
-    // Constructor
+    
     HashTable(int initialCapacity = 5) {
         capacity = initialCapacity;
         table = new int[capacity];
@@ -86,115 +86,77 @@ public:
 
     // function to insert
     void insert(int key) {
-        if (search(key) != -1) {  //if key already exists
-            cout << "Duplicate key insertion is not allowed" << endl;
+        if (search(key) != -1) {  //check if key already exists
+            cout << "Duplicate key insertion is not allowed" << endl; //same key cant be inserted
             return;
         }
 
         // resizing if load factor exceeds threshold
-        if ((float)size / capacity >= loadFactorThreshold) {
+        if ((float)size / capacity >= loadFactorThreshold) { //if n/m greater than 0.8 resizing
             resizeAndRehash();
         }
 
-        int index = hashFunction(key);
+        int index = hashFunction(key);  //index finding by hash function 
         int i = 0;
 
-        // Quadratic probing for hashing
+        // quadratic probing for handling the collisions in this hashing
         while (i < capacity) {
-            int newIndex = (index + i * i) % capacity;
-            if (table[newIndex] == -1 || isDeleted[newIndex]) {
+            int newIndex = (index + i * i) % capacity;  //h(x) = (h(x) + i^2) mod m
+            if (table[newIndex] == -1 || isDeleted[newIndex]) {  //if it was deleted previously
                 table[newIndex] = key;
-                isDeleted[newIndex] = false;  // Reset deleted marker
+                isDeleted[newIndex] = false;  // reset deleted marker
                 size++;
                 return;
             }
             i++;
         }
 
-        // If probing limit exceeded
-        cout << "Max probing limit reached!" << endl;
+        // if probing limit exceeded 
+        cout << "Max probing limit reached" << endl;
     }
 
-    // Search function: returns the index or -1 if not found
+    // search function returns the index if found or -1 if not found
     int search(int key) {
         int index = hashFunction(key);
         int i = 0;
 
-        // Quadratic probing search
+        //  search according to quadratic probing
         while (i < capacity) {
             int newIndex = (index + i * i) % capacity;
-            if (table[newIndex] == -1 && !isDeleted[newIndex]) {
+            if (table[newIndex] == -1 && !isDeleted[newIndex]) {  //if it was deleted
                 return -1;  // Key not found
             }
             if (table[newIndex] == key) {
-                return newIndex;  // Key found at newIndex
+                return newIndex;  // Key found at ne indexed from resized rehashed table
             }
             i++;
         }
 
-        return -1;  // Key not found after full probing
+        return -1;  // Key not found after checking
     }
 
-    // Remove function
-    void remove(int key) {
-        int index = search(key);
+    // delete function
+    void deletee(int key) {
+        int index = search(key);  //using search funtion searching for key to be deleted
         if (index == -1) {
             cout << "Element not found" << endl;
             return;
         }
 
         table[index] = -1;
-        isDeleted[index] = true;  // Mark the slot as deleted
-        size--;
+        isDeleted[index] = true;  // mark the slot as deleted - needed in searching
+        size--;  //decrement size when deleted
     }
 
-    // Print table function
+    // function to print table
     void printTable() {
         for (int i = 0; i < capacity; i++) {
             if (table[i] != -1 && !isDeleted[i]) {
-                cout << table[i] << " ";
+                cout << table[i] << " ";  //if element exists print that
             } else {
-                cout << "- ";
+                cout << "- ";  //otherwise print a - to show the space exists acc to sample output
             }
         }
         cout << endl;
     }
 };
-
-
-
-/*
-int main() {
-    int initialSize = 7; 
-    HashTable ht(initialSize);
-
-    // Example test case
-    ht.insert(1);
-    ht.printTable();
-    ht.insert(6);
-    ht.printTable();
-    ht.insert(15);
-    ht.printTable(); 
-    ht.insert(25);
-    ht.printTable();
-    ht.remove(15);
-    ht.printTable();
-    ht.insert(29);  
-    ht.printTable(); 
-    
-    ht.insert(35);  
-    ht.printTable();
-    ht.insert(42);  
-    ht.printTable();
-    ht.insert(11);  
-    ht.printTable();
-    ht.insert(2);  
-    ht.printTable();
-
-    int find = ht.search(22);
-    std::cout << "Found at:" << find << std::endl;
-
-    return 0;
-}
-
-*/
