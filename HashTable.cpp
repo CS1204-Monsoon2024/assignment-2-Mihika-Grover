@@ -113,7 +113,7 @@ public:
         }
 
         // If probing limit exceeded
-        cout << "Max probing limit reached" << endl;
+        cout << "Max probing limit reached!" << endl;
     }
 
     // Search function will returns the index if found element or -1 if not found
