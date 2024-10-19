@@ -17,20 +17,18 @@ private:
     //needed to resize table to prime
     bool isPrime(int n) {
         int count = 0;
-        else{
-            // checking for no of divisors of that number
-            for (int i = 1; i <= n; i++) {
+        // checking for no of divisors of that number
+        for (int i = 1; i <= n; i++) {
 
             //if n is divisible by i then count of divisor = +1
             if (n % i == 0)
                 count++;
         }
-            if (count>2)
-                return true;
-            else
-                return false;
-        }
-        return true;
+        if (count>2)
+            return false;  //not prime if more than 2 divisors
+        else
+            return true;
+        
     }
 
     // function to find the next prime number greater to resize to that
