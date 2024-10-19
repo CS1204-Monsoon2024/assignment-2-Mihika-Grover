@@ -16,19 +16,14 @@ private:
     //function to check if a number is prime
     //needed to resize table to prime
     bool isPrime(int n) {
-        int count = 0;
-        // checking for no of divisors of that number
-        for (int i = 1; i <= n; i++) {
-
-            //if n is divisible by i then count of divisor = +1
-            if (n % i == 0)
-                count++;
+        if (n <= 1) return false;
+        if (n == 2 || n == 3) return true;
+        if (n % 2 == 0 || n % 3 == 0) return false;
+        for (int i = 5; i * i <= n; i += 6) {
+            if (n % i == 0 || n % (i + 2) == 0)
+                return false;
         }
-        if (count>2)
-            return false;  //not prime if more than 2 divisors
-        else
-            return true;
-        
+        return true;
     }
 
     // function to find the next prime number greater to resize to that
