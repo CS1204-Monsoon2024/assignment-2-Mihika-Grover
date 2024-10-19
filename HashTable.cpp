@@ -67,8 +67,10 @@ private:
                 insert(oldTable[i]);  // Reinsert the element into the new table
             }
         }
-
-}  
+        // deleting old table
+        delete[] oldTable;
+        delete[] oldIsDeleted;
+    } 
 
 public:
     
