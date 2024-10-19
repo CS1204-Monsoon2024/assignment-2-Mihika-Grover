@@ -14,6 +14,7 @@ private:
         return key % capacity;   //h(k) = k mod m
     }
     // Helper function to check if a number is prime
+    /*
     bool isPrime(int n) {
         if (n <= 1) return false;
         if (n == 2 || n == 3) return true;
@@ -32,12 +33,12 @@ private:
         }
         return n;
     }
-
+    */
     // resizing and rehashing when load factor > 0.8
     void resizeAndRehash() {
         int oldCapacity = capacity;
         capacity *= 2;  // doubling the capacity
-        capacity = nextPrime(capacity);
+        //capacity = nextPrime(capacity);
         int* oldTable = table;
         bool* oldIsDeleted = isDeleted;
 
