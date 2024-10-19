@@ -25,6 +25,10 @@ private:
             if (n % i == 0)
                 count++;
         }
+            if (count>2)
+                return true;
+            else
+                return false;
         }
         return true;
     }
