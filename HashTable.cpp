@@ -7,7 +7,7 @@ private:
     bool* isDeleted;      // Array to track deleted elements
     int size;             // no of numbers in table
     int capacity;         // max capacity of table
-    const float loadFactorThreshold = 0.8; //load factor as given in ques
+    float loadFactorThreshold = 0.8; //load factor as given in ques
 
     // defining hash function
     int hashFunction(int key) {
