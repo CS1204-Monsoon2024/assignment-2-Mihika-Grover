@@ -135,8 +135,8 @@ public:
         return -1;  // Key not found after checking
     }
 
-    // delete function
-    void deletee(int key) {
+    // function to remove elements
+    void remove(int key) {
         int index = search(key);  //using search funtion searching for key to be deleted
         if (index == -1) {
             cout << "Element not found" << endl;
